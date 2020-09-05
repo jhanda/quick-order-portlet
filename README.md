@@ -1,6 +1,7 @@
 # Quick Order Widget
 
-![Freelancer](doc/preview.png)
+![Freelancer](doc/preview.gif
+)
 
 ## Usage
 
