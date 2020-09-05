@@ -1,0 +1,5 @@
+Bundle-Name: quick-order-web
+Bundle-SymbolicName: com.liferay.commerce.demo.quick.order
+Bundle-Version: 1.0.0
+Export-Package: com.liferay.commerce.demo.quick.order.constants
+-metatype: *
