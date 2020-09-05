@@ -15,7 +15,7 @@ URL for your Checkout Page and Catalog Page in the System Settings > Other > cat
 
 ## Installation
 
-- Download the `.jar` file in [releases](https://github.com/jhanda/quick-order-widget/releases/tag/1.0.0) and deploy it into Liferay.
+- Download the `.jar` file in [releases](https://github.com/jhanda/QuickOrderPortlet/releases/tag/1.0.0) and deploy it into Liferay.
 
 or
 
