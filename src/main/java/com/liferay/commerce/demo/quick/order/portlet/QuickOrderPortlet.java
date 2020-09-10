@@ -1,10 +1,8 @@
 package com.liferay.commerce.demo.quick.order.portlet;
 
 import com.liferay.commerce.account.model.CommerceAccount;
-import com.liferay.commerce.account.service.CommerceAccountLocalService;
 import com.liferay.commerce.constants.CommerceOrderConstants;
 import com.liferay.commerce.context.CommerceContext;
-import com.liferay.commerce.context.CommerceContextFactory;
 import com.liferay.commerce.currency.service.CommerceCurrencyLocalService;
 import com.liferay.commerce.demo.quick.order.configuration.QuickOrderConfiguration;
 import com.liferay.commerce.demo.quick.order.constants.QuickOrderPortletKeys;
@@ -24,15 +22,15 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.*;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
-
+import org.osgi.service.component.annotations.Reference;
 
 import javax.portlet.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,20 +60,28 @@ import java.util.regex.Pattern;
 )
 public class QuickOrderPortlet extends MVCPortlet {
 
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_configuration = ConfigurableUtil.createConfigurable(
+				QuickOrderConfiguration.class, properties);
+	}
+
 	@Override
 	public void render(RenderRequest request, RenderResponse response) throws IOException, PortletException {
 
-		QuickOrderHelper quickOrderHelper = new QuickOrderHelper(request);
+		QuickOrderHelper quickOrderHelper = new QuickOrderHelper(request, _commerceChannelLocalService);
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
 
 		//Get Channel
-		CommerceChannel commerceChannel =  getCommerceChannel(themeDisplay);
+		CommerceChannel commerceChannel = quickOrderHelper.getCommerceChannel();
 
 		//Get Account
-		CommerceAccount commerceAccount = getCurrentCommerceAccount(request, commerceChannel.getGroupId());
+		CommerceAccount commerceAccount = quickOrderHelper.getCommerceAccount();
 
 		//Get Open Orders
-		List<CommerceOrder> commerceOpenOrders = getCommerceOpenOrders(commerceAccount.getCommerceAccountId(), commerceChannel.getGroupId());
+		List<CommerceOrder> commerceOpenOrders =
+				getCommerceOpenOrders(commerceAccount.getCommerceAccountId(), commerceChannel.getGroupId());
 
 		request.setAttribute("commerceOpenOrders", commerceOpenOrders);
 
@@ -84,6 +90,7 @@ public class QuickOrderPortlet extends MVCPortlet {
 
 	public void submitPartNumbers(ActionRequest request, ActionResponse response) throws PortalException {
 
+		QuickOrderHelper quickOrderHelper = new QuickOrderHelper(request, _commerceChannelLocalService);
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(request);
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
 		long companyId = themeDisplay.getCompanyId();
@@ -91,16 +98,13 @@ public class QuickOrderPortlet extends MVCPortlet {
 
 
 		//Get Channel
-		CommerceChannel commerceChannel =  getCommerceChannel(themeDisplay);
-		_log.debug("Commerce Channel: " + commerceChannel.getCommerceChannelId());
+		CommerceChannel commerceChannel =  quickOrderHelper.getCommerceChannel();
 
 		//Get Account
-		CommerceAccount commerceAccount = getCurrentCommerceAccount(request, commerceChannel.getGroupId());
-		_log.debug("Commerce Account: " + commerceAccount.getCommerceAccountGroup());
+		CommerceAccount commerceAccount = quickOrderHelper.getCommerceAccount();
 
 		//Get Order
 		long commerceOrderId = ParamUtil.getLong(request, "orderId");
-		_log.debug("Commerce Order: " + commerceOrderId);
 
 		if (commerceOrderId == 0){
 
@@ -115,7 +119,7 @@ public class QuickOrderPortlet extends MVCPortlet {
 		}
 
 		//Create Commerce Context
-		CommerceContext commerceContext = _commerceContextFactory.create(companyId, commerceChannel.getGroupId(), themeDisplay.getUserId(), commerceOrderId, commerceAccount.getCommerceAccountId());
+		CommerceContext commerceContext = quickOrderHelper.getCommerceContext();
 
 		//Process order
 		HashMap<String, Integer> orderMap = getOrderItems(request);
@@ -144,54 +148,6 @@ public class QuickOrderPortlet extends MVCPortlet {
 		request.setAttribute("orderResults", orderResults);
 		response.setRenderParameter("mvcPath", "/confirmation.jsp");
 
-	}
-
-	@Activate
-	@Modified
-	protected void activate(Map<String, Object> properties) {
-		_configuration = ConfigurableUtil.createConfigurable(
-				QuickOrderConfiguration.class, properties);
-	}
-
-	private volatile QuickOrderConfiguration _configuration;
-
-
-	private CommerceAccount getCurrentCommerceAccount(PortletRequest request, long channelGroupId) {
-
-		HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest(request);
-		HttpServletRequest originalHttpServletRequest = PortalUtil.getOriginalServletRequest(httpServletRequest);
-
-		CommerceAccount commerceAccount = null;
-
-		String curGroupCommerceAccountIdKey =
-				_CURRENT_COMMERCE_ACCOUNT_ID_KEY + channelGroupId;
-
-		long currentCommerceAccountId = SessionParamUtil.getLong(
-				originalHttpServletRequest, curGroupCommerceAccountIdKey);
-
-		_log.debug("Current Commerce Account ID:  " + currentCommerceAccountId);
-
-		if (currentCommerceAccountId > 0) {
-
-			commerceAccount = _commerceAccountLocalService.fetchCommerceAccount(currentCommerceAccountId);
-			_log.debug("Currenct Account: " + commerceAccount.getName());
-		}
-
-		return commerceAccount;
-	}
-
-	private CommerceChannel getCommerceChannel(ThemeDisplay themeDisplay){
-
-		CommerceChannel commerceChannel = null;
-
-		try {
-			long commerceChannelGroupId = _commerceChannelLocalService.getCommerceChannelGroupIdBySiteGroupId(themeDisplay.getSiteGroupId());
-			commerceChannel = _commerceChannelLocalService.getCommerceChannelByGroupId(commerceChannelGroupId);
-		}catch (PortalException e){
-			_log.error(e);
-		}
-
-		return commerceChannel;
 	}
 
 	private List<CommerceOrder> getCommerceOpenOrders(long commerceAccountId, long commerceChannelGroupId){
@@ -223,17 +179,10 @@ public class QuickOrderPortlet extends MVCPortlet {
 		return orderMap;
 	}
 
+	private volatile QuickOrderConfiguration _configuration;
+
 	private static final Log _log = LogFactoryUtil.getLog(
 			QuickOrderPortlet.class);
-
-	private static final String _CURRENT_COMMERCE_ACCOUNT_ID_KEY =
-			"LIFERAY_SHARED_CURRENT_COMMERCE_ACCOUNT_ID_";
-
-	@Reference
-	private CommerceAccountLocalService _commerceAccountLocalService;
-
-	@Reference
-	private CommerceContextFactory _commerceContextFactory;
 
 	@Reference
 	private CommerceCurrencyLocalService _commerceCurrencyLocalService;
