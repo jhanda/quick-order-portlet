@@ -1,5 +1,3 @@
-<%@ page import="com.liferay.commerce.demo.quick.order.configuration.QuickOrderConfiguration" %>
-<%@ page import="com.liferay.portal.kernel.util.GetterUtil" %>
 <%@ include file="/init.jsp" %>
 
 <%

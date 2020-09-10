@@ -82,18 +82,6 @@ public class QuickOrderPortlet extends MVCPortlet {
 		super.render(request, response);
 	}
 
-	public void deleteOrders(ActionRequest request, ActionResponse response) throws PortalException {		try {
-			List<CommerceOrder> commerceOrders = _commerceOrderLocalService.getCommerceOrders(-1, -1);
-			for (CommerceOrder commerceOrder : commerceOrders) {
-				long commerceOrderId = commerceOrder.getCommerceOrderId();
-				_commerceOrderLocalService.deleteCommerceOrder(commerceOrderId);
-				_log.debug("Deleted order:  " + commerceOrderId);
-			}
-		}catch (PortalException e){
-			_log.error("Error deleting orders. " + e);
-		}
-	}
-
 	public void submitPartNumbers(ActionRequest request, ActionResponse response) throws PortalException {
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(request);
@@ -237,7 +225,6 @@ public class QuickOrderPortlet extends MVCPortlet {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 			QuickOrderPortlet.class);
-
 
 	private static final String _CURRENT_COMMERCE_ACCOUNT_ID_KEY =
 			"LIFERAY_SHARED_CURRENT_COMMERCE_ACCOUNT_ID_";

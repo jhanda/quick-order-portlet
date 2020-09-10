@@ -33,17 +33,3 @@
 		<aui:button value="submit" type="submit"></aui:button>
 	</aui:fieldset>
 </aui:form>
-
-
-<%----------------------------------------%>
-<%--<portlet:actionURL name="deleteOrders"--%>
-<%-- var="deleteOrdersActionURL" />--%>
-
-<%--<aui:form action="<%= deleteOrdersActionURL %>" data-senna-off="false" method="post" name="fm">--%>
-
-<%--	<aui:fieldset>--%>
-<%--		<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />--%>
-
-<%--		<aui:button label = "Delete-Orders" name="Delete" type="submit"></aui:button>--%>
-<%--	</aui:fieldset>--%>
-<%--</aui:form>--%>
