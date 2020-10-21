@@ -15,19 +15,20 @@ dependencies {
 	compileOnly group: "jstl", name: "jstl"
 	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"
 
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.api", version: "22.1.1"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.api", version: "19.1.1"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.account.api"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.api"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.currency.api"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.frontend.taglib"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.api"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.content.api"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.type.simple"
 
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.content.api", version: "3.0.3"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.type.simple", version: "1.0.0"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.frontend.taglib", version: "7.2.1"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.currency.api", version: "3.2.1"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.account.api", version: "6.0.3"
 
 
-	compileOnly group: "javax.ws.rs", name: "javax.ws.rs-api", version: "2.1"
-	cssBuilder group: "com.liferay", name: "com.liferay.css.builder", version: "3.0.2"
+	compileOnly group: "javax.ws.rs", name: "javax.ws.rs-api"
+	cssBuilder group: "com.liferay", name: "com.liferay.css.builder"
 	compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
 	compile group: 'com.liferay.portal', name: 'release.portal.api', version: '7.2.0'
+
 
 }

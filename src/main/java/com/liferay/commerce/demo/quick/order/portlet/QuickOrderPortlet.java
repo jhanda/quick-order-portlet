@@ -139,7 +139,7 @@ public class QuickOrderPortlet extends MVCPortlet {
 				_commerceOrderItemLocalService.addCommerceOrderItem(commerceOrderId, cpInstanceId, quantity, 0, json, commerceContext, serviceContext);
 				orderResults.add(sku + ":" + quantity + ":" + "Added to order");
 			} catch (NoSuchCPInstanceException e){
-				orderResults.add(sku + ":" + quantity + ":" + "Part Number not found.  <a target='_blank' href='" + catalogUrl + "?q=MMIN00'> Search </a>");
+				orderResults.add(sku + ":" + quantity + ":" + "Part Number not found.  <a target='_blank' href='" + catalogUrl + "?q=" + sku + "'> Search </a>");
 			}
 
 		}
@@ -198,6 +198,5 @@ public class QuickOrderPortlet extends MVCPortlet {
 
 	@Reference
 	private CommerceChannelLocalService _commerceChannelLocalService;
-
 
 }
