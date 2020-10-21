@@ -15,13 +15,14 @@ dependencies {
 	compileOnly group: "jstl", name: "jstl"
 	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"
 
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.api", version: "22.1.1"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.api", version: "19.1.1"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.api", version: "22.3.3"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.currency.api", version: "7.0.2"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.frontend.taglib", version: "10.0.14"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.api", version: "29.3.0"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.content.api", version: "5.0.3"
+	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.type.simple", version: "3.0.8"
 
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.content.api", version: "3.0.3"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.product.type.simple", version: "1.0.0"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.frontend.taglib", version: "7.2.1"
-	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.currency.api", version: "3.2.1"
+
 	compileOnly group: "com.liferay.commerce", name: "com.liferay.commerce.account.api", version: "6.0.3"
 
 
