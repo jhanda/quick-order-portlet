@@ -9,12 +9,15 @@ import com.liferay.commerce.demo.quick.order.constants.QuickOrderPortletKeys;
 import com.liferay.commerce.demo.quick.order.util.QuickOrderHelper;
 import com.liferay.commerce.model.CommerceOrder;
 import com.liferay.commerce.product.exception.NoSuchCPInstanceException;
+import com.liferay.commerce.product.model.CPInstance;
 import com.liferay.commerce.product.model.CommerceChannel;
 import com.liferay.commerce.product.service.CPInstanceLocalService;
 import com.liferay.commerce.product.service.CommerceChannelLocalService;
 import com.liferay.commerce.service.CommerceOrderItemLocalService;
 import com.liferay.commerce.service.CommerceOrderLocalService;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -131,17 +134,19 @@ public class QuickOrderPortlet extends MVCPortlet {
 
 			String json = "";
 
-			try {
-
-				long cpInstanceId = _cpInstanceLocalService.getCPInstanceByExternalReferenceCode(companyId, sku).getCPInstanceId();
+			DynamicQuery dq = _cpInstanceLocalService.dynamicQuery();
+			dq.add(RestrictionsFactoryUtil.eq("sku", sku));
+			List<CPInstance> cpInstances = _cpInstanceLocalService.dynamicQuery(dq);
+			long cpInstanceId = 0;
+			if (cpInstances.size() > 0){
+				cpInstanceId = cpInstances.get(0).getCPInstanceId();
 				_log.debug("CPInstance: " + cpInstanceId);
-
 				_commerceOrderItemLocalService.addCommerceOrderItem(commerceOrderId, cpInstanceId, quantity, 0, json, commerceContext, serviceContext);
 				orderResults.add(sku + ":" + quantity + ":" + "Added to order");
-			} catch (NoSuchCPInstanceException e){
+			}else{
+				_log.debug("No CP Instance found for SKU:  " + sku);
 				orderResults.add(sku + ":" + quantity + ":" + "Part Number not found.  <a target='_blank' href='" + catalogUrl + "?q=" + sku + "'> Search </a>");
 			}
-
 		}
 
 		request.setAttribute(QuickOrderConfiguration.class.getName(), _configuration);
