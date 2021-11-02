@@ -11,11 +11,11 @@ URL for your Checkout Page and Catalog Page in the System Settings > Other > cat
 
 ## Requirements
 
-- Liferay Commerce 3.0.0
+- Liferay Commerce 4.0.0
 
 ## Installation
 
-- Download the `.jar` file in [releases](https://github.com/jhanda/quick-order-portlet/releases/tag/2.0.1) and deploy it into Liferay.
+- Download the `.jar` file in [releases](https://github.com/jhanda/quick-order-portlet/releases/tag/3.0.0) and deploy it into Liferay.
 
 or
 

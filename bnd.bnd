@@ -1,5 +1,5 @@
 Bundle-Name: quick-order-web
 Bundle-SymbolicName: com.liferay.commerce.demo.quick.order
-Bundle-Version: 2.0.1
+Bundle-Version: 3.0.0
 Export-Package: com.liferay.commerce.demo.quick.order
 -metatype: *

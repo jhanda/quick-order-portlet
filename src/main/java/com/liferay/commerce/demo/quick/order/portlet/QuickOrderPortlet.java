@@ -130,6 +130,7 @@ public class QuickOrderPortlet extends MVCPortlet {
 		for (String sku : orderMap.keySet()) {
 
 			int quantity = GetterUtil.getInteger(orderMap.get(sku));
+			int shippedQuantity = 0;
 			_log.debug("Adding SKU: " + sku + " -- Quantity:  " + quantity);
 
 			String json = "";
@@ -141,7 +142,8 @@ public class QuickOrderPortlet extends MVCPortlet {
 			if (cpInstances.size() > 0){
 				cpInstanceId = cpInstances.get(0).getCPInstanceId();
 				_log.debug("CPInstance: " + cpInstanceId);
-				_commerceOrderItemLocalService.addCommerceOrderItem(commerceOrderId, cpInstanceId, quantity, 0, json, commerceContext, serviceContext);
+				_commerceOrderItemLocalService.addCommerceOrderItem(commerceOrderId, cpInstanceId, json, quantity,
+						shippedQuantity, commerceContext, serviceContext);
 				orderResults.add(sku + ":" + quantity + ":" + "Added to order");
 			}else{
 				_log.debug("No CP Instance found for SKU:  " + sku);
